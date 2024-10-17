@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import tensorflow as tf
+from src.prediction.prediction import PredictModel
 from src.window_generator import WindowGenerator
 
 class SingleStep(tf.keras.Model):
@@ -66,7 +67,6 @@ if __name__ == "__main__":
     test_df = df[int(n*0.9):]
 
     num_features = df.shape[1]  # Numero di caratteristiche di output
-    print(len(train_df))
 
     # Inizializza il WindowGenerator
     window = WindowGenerator(input_width=24, label_width=1, shift=1, 
@@ -84,3 +84,15 @@ if __name__ == "__main__":
 
     print(f"Prestazioni sul dataset di validazione: {val_performance}")
     print(f"Prestazioni sul dataset di test: {test_performance}")
+    
+    column_names = df.columns.to_list()
+
+    # Crea un'istanza della classe PredictModel
+    predictor = PredictModel(single_step_model, window)
+
+    # Effettua previsioni sul dataset di test
+    test_dataset = window.make_dataset(window.test_df)
+    predictions = predictor.make_prediction(test_dataset)
+
+    # Traccia le previsioni con la funzione plot predefinita del window_generator
+    predictor.plot_predictions(plot_col=column_names.pop)  # Sostituisci 'feature1' con il nome della tua colonna
