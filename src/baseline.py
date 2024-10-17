@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import tensorflow as tf
-from window_generator import WindowGenerator
+from src.window_generator import WindowGenerator
 
 class Baseline(tf.keras.Model):
     def __init__(self, label_index=None):

@@ -1,8 +1,8 @@
 import os
 import pandas as pd
 import tensorflow as tf
-from window_generator import WindowGenerator
-from dataset import Dataset  # Assicurati che la classe Dataset sia implementata correttamente
+from src.window_generator import WindowGenerator
+from src.dataset import Dataset  # Assicurati che la classe Dataset sia implementata correttamente
 
 class ResidualWrapper(tf.keras.Model):
   def __init__(self, model):
