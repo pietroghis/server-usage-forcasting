@@ -92,8 +92,8 @@ if __name__ == "__main__":
     predictor = PredictModel(residual_model, window)
 
     # Effettua previsioni sul dataset di test
-    test_dataset = window.make_dataset(window.test_df)
+    test_dataset = window.make_dataset(df)
     predictions = predictor.make_prediction(test_dataset)
 
     # Traccia le previsioni con la funzione plot predefinita del window_generator
-    predictor.plot_predictions(plot_col=column_names.pop)  # Sostituisci 'feature1' con il nome della tua colonna
+    predictor.plot_predictions(plot_col='feature1')  # Sostituisci 'feature1' con il nome della tua colonna

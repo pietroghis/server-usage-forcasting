@@ -24,7 +24,8 @@ class WindowGenerator:
         self.train_df = train_df
         self.val_df = val_df
         self.test_df = test_df
-
+        self.df = pd.concat([self.train_df, self.val_df, self.test_df], axis=0).reset_index(drop=True)
+        
         # Parametri per le finestre
         self.input_width = input_width
         self.label_width = label_width
