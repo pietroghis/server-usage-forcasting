@@ -26,16 +26,6 @@ class DatasetCreator:
                 df = pd.read_csv(file_path, sep=';')  # Assumiamo che il separatore sia ';'
                 all_data = pd.concat([all_data, df], ignore_index=True)
         
-        # Droppa le colonne non necessarie
-        columns_to_drop = ['\tCPU cores', '\tCPU capacity provisioned [MHZ]', 
-                           '\tMemory capacity provisioned [KB]', 
-                           '\tDisk write throughput [KB/s]', 
-                           '\tDisk read throughput [KB/s]', 
-                           '\tNetwork received throughput [KB/s]', 
-                           '\tNetwork transmitted throughput [KB/s]', 
-                           '\tCPU usage [MHZ]', '\tMemory usage [KB]']
-        all_data.drop(columns_to_drop, axis=1, inplace=True)
-        
         # Convertire il timestamp
         date_time = pd.to_datetime(all_data.pop('Timestamp [ms]'), unit='ms')
         all_data['timestamp_s'] = date_time.map(pd.Timestamp.timestamp)
@@ -54,6 +44,8 @@ class DatasetCreator:
         val_df = self.df[int(n*0.7):int(n*0.9)]
         test_df = self.df[int(n*0.9):]
         
+        train_df, test_df = self.normalize(train_df=train_df, test_df=test_df)
+
         return train_df, val_df, test_df
 
     def normalize(self, train_df, test_df):

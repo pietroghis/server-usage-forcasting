@@ -13,8 +13,7 @@ class FeedBack(tf.keras.Model):
         self.out_steps = out_steps
         self.units = units
         self.lstm_cell = tf.keras.layers.LSTMCell(units)
-        # Wrap the LSTMCell in an RNN to simplify the `warmup` method.
-        self.lstm_rnn = tf.keras.layers.RNN(self.lstm_cell, return_state=True)
+        self.lstm_rnn = tf.keras.layers.LSTM(self.lstm_cell, return_state=True)
         self.dense = tf.keras.layers.Dense(num_features)
 
     def warmup(self, inputs):
@@ -51,15 +50,10 @@ class FeedBack(tf.keras.Model):
         # Insert the first prediction.
         predictions.append(prediction)
 
-        # Run the rest of the prediction steps.
         for n in range(1, self.out_steps):
-            # Use the last prediction as input.
             x = prediction
-            # Execute one LSTM step.
             x, state = self.lstm_cell(x, states=state, training=training)
-            # Convert the LSTM output to a prediction.
             prediction = self.dense(x)
-            # Add the prediction to the output.
             predictions.append(prediction)
 
         # predictions.shape => (time, batch, features)
@@ -67,6 +61,8 @@ class FeedBack(tf.keras.Model):
         # predictions.shape => (batch, time, features)
         predictions = tf.transpose(predictions, [1, 0, 2])
         return predictions
+
+
 
 
 # Esempio di utilizzo
@@ -110,4 +106,4 @@ if __name__ == "__main__":
     predictions = predictor.make_prediction(test_dataset)
 
     # Traccia le previsioni con la funzione plot predefinita del window_generator
-    predictor.plot_predictions(plot_col='feature1')  # Sostituisci 'feature1' con il nome della tua colonna
+    predictor.calculate_deltas(test_dataset, plot_col='feature1')  # Sostituisci 'feature1' con il nome della tua colonna

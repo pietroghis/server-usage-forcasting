@@ -26,13 +26,11 @@ class WindowGenerator:
         self.test_df = test_df
         self.df = pd.concat([self.train_df, self.val_df, self.test_df], axis=0).reset_index(drop=True)
         
-        # Parametri per le finestre
         self.input_width = input_width
         self.label_width = label_width
         self.shift = shift
         self.label_columns = label_columns
 
-        # Calcolo degli indici per le finestre
         self.total_window_size = input_width + shift
         self.input_slice = slice(0, input_width)
         self.input_indices = np.arange(self.total_window_size)[self.input_slice]

@@ -67,4 +67,4 @@ if __name__ == "__main__":
     predictions = predictor.make_prediction(test_dataset)
 
     # Traccia le previsioni con la funzione plot predefinita del window_generator
-    predictor.plot_predictions(plot_col='feature1')  # Sostituisci 'feature1' con il nome della tua colonna
+    predictor.calculate_deltas(test_dataset, plot_col='feature1')  # Sostituisci 'feature1' con il nome della tua colonna
