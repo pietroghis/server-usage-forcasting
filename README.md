@@ -26,20 +26,14 @@ if __name__ == "__main__":
     # Sostituisci con il percorso della tua cartella
     folder_path = "/content/drive/MyDrive/server_dataset"
 
-    # Crea il DataFrame combinato
-    df = create_combined_dataframe(folder_path)
+    # Utilizza la classe DatasetCreator per caricare e preparare il dataset
+    dataset_creator = DatasetCreator(folder_path)
+    
+    # Suddividi il dataset in training, validation e test
+    train_df, val_df, test_df = dataset_creator.split_dataset()
 
-    # Convertire il timestamp e preparare i dati
-    date_time = pd.to_datetime(df.pop('Timestamp [ms]'), unit='ms')
-    timestamp_s = date_time.map(pd.Timestamp.timestamp)
-    column_indices = {name: i for i, name in enumerate(df.columns)}
-
-    n = len(df)
-    train_df = df[0:int(n*0.7)]
-    val_df = df[int(n*0.7):int(n*0.9)]
-    test_df = df[int(n*0.9):]
-
-    num_features = df.shape[1]  # Numero di caratteristiche di output
+    # Ottieni il numero di caratteristiche del dataset
+    num_features = train_df.shape[1]  # Numero di caratteristiche di output
 
     # Inizializza il WindowGenerator
     window = WindowGenerator(input_width=24, label_width=1, shift=1, 
@@ -58,13 +52,11 @@ if __name__ == "__main__":
     print(f"Prestazioni sul dataset di validazione: {val_performance}")
     print(f"Prestazioni sul dataset di test: {test_performance}")
     
-    column_names = df.columns.to_list()
-
     # Crea un'istanza della classe PredictModel
     predictor = PredictModel(single_step_model, window)
 
     # Effettua previsioni sul dataset di test
-    test_dataset = window.make_dataset(df)
+    test_dataset = window.make_dataset(test_df)
     predictions = predictor.make_prediction(test_dataset)
 
     # Traccia le previsioni con la funzione plot predefinita del window_generator
