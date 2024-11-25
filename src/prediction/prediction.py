@@ -35,7 +35,7 @@ class PredictModel:
 
         # Creazione di un dizionario per le previsioni per ogni colonna
         prediction_dict = {}
-        columns = ['cpu_usage', 'ram_usage', 'bandwidth_usage', 'power_usage', 'cpu_temperature']
+        columns = dataset.columns
 
         for i, col in enumerate(columns):
             prediction_dict[col] = predictions[:, -1, i]  # Previsioni per l'ultima ora

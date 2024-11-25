@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 class DatasetCreator:
-    def __init__(self, folder_path):
+    def __init__(self, folder_path = '', json_data = ''):
         """
         Inizializza il creatore del dataset con il percorso della cartella contenente i CSV.
         
@@ -10,7 +10,12 @@ class DatasetCreator:
             folder_path (str): Il percorso della cartella contenente i file CSV.
         """
         self.folder_path = folder_path
-        self.df = self.create_combined_dataframe()
+        self.json_data = json_data
+
+        if(folder_path == '') : 
+            self.df = self.create_dataframe_from_json()
+        else:    
+            self.df = self.create_combined_dataframe()
         
     def create_combined_dataframe(self):
         """
@@ -29,6 +34,23 @@ class DatasetCreator:
         # Convertire il timestamp
         date_time = pd.to_datetime(all_data.pop('Timestamp [ms]'), unit='ms')
         all_data['timestamp_s'] = date_time.map(pd.Timestamp.timestamp)
+        
+        return all_data
+    
+    def create_dataframe_from_json(self):
+        """
+        Crea un DataFrame a partire da un JSON fornito.
+        
+        Returns:
+            pd.DataFrame: Il DataFrame creato dal JSON.
+        """
+        # Creare il DataFrame dai dati JSON
+        all_data = pd.DataFrame(self.json_data)
+        
+        # Convertire il timestamp
+        if 'Timestamp [ms]' in all_data.columns:
+            date_time = pd.to_datetime(all_data.pop('Timestamp [ms]'), unit='ms')
+            all_data['timestamp_s'] = date_time.map(pd.Timestamp.timestamp)
         
         return all_data
 

@@ -7,7 +7,7 @@ from src.prediction.prediction import PredictModel
 from src.window_generator import WindowGenerator
 from dataset import DatasetCreator  # Assicurati che la classe DatasetCreator sia implementata correttamente
 
-class FeedBack(tf.keras.Model):
+class MultiStep(tf.keras.Model):
     def __init__(self, units, out_steps, num_features):
         super().__init__()
         self.out_steps = out_steps
@@ -86,7 +86,7 @@ if __name__ == "__main__":
                              train_df=train_df, val_df=val_df, test_df=test_df)
 
     # Crea il modello FeedBack
-    feedback_model = FeedBack(units=32, out_steps=OUT_STEPS, num_features=num_features)
+    feedback_model = MultiStep(units=32, out_steps=OUT_STEPS, num_features=num_features)
 
     # Addestramento del modello
     history = window.compile_and_fit(feedback_model)
